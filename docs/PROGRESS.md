@@ -25,16 +25,20 @@
 - GitHub Actions Pages 배포 워크플로 `.github/workflows/deploy-demo.yml`, 루트 `README.md`
 - 공개 전 점검 완료: API 키·토큰 패턴 없음, `.env` 커밋 이력 없음, 이메일은 예약 도메인만 사용(커밋 작성자 이메일은 별도 확인 필요)
 
+- GitHub 공개 배포(2026-11-05, 사용자 승인)
+  - 커밋 작성자 이메일을 GitHub noreply 주소로 교체(push 전 로컬 커밋만, 파일 내용 동일 확인), 저장소 로컬 git config도 noreply로 설정
+  - `origin` = https://github.com/ChaJunHo0516/jobdicc.git, `main` push(신규 브랜치, 강제 push 없음)
+  - Pages 활성화(build_type=workflow) → Actions 실행 41994766994 성공(build: 테스트·빌드, deploy)
+  - 사이트: https://chajunho0516.github.io/jobdicc/ (HTTP 200, 실서버 스모크 19/19 통과, 콘솔 오류 0)
+
 ## 현재 진행 중인 작업
-- 원격 저장소 연결·push·Pages 활성화는 **사용자 최종 승인 대기** 중
-  - 원격 `ChaJunHo0516/jobdicc`: PUBLIC, 비어 있음(덮어쓸 이력 없음), Pages 미활성
-  - 확인 필요: 커밋 작성자 이메일(`git config user.email`)이 공개 저장소 이력에 노출된다
+- 없음. 다음은 백엔드 Phase 4 재개
 
 ## 남은 작업
 **프론트엔드 데모**
 - [x] 데모 앱 화면 전체
 - [x] 데모 단위 테스트(10개), 빌드, 브라우저 스모크 테스트(19개 항목, Edge headless)
-- [ ] 사용자 승인 후 `git remote add origin` → push → Pages 활성화(build_type=workflow) → 배포 확인
+- [x] 원격 연결 → push → Pages 활성화 → 배포·실서버 확인
 
 **실제 백엔드(데모 이후 재개)**
 - [ ] Phase 4 나머지: AI 결과 서비스(생성·검토·승인 → 퀴즈 공개), 학습 서비스(열람·퀴즈 응시·진도), 화면, 테스트 작성
@@ -43,6 +47,8 @@
 - [ ] Phase 7: E2E·보안 검증 (Playwright 브라우저 다운로드 승인 필요)
 
 ## 발견된 오류 / 이슈
+- 브랜치를 처음 만드는 push(`main` 생성)에서는 Pages 워크플로가 자동 실행되지 않았다. `gh workflow run`으로 수동 실행해 해결했다. 이후 `demo/**`를 변경해 push하면 자동 실행되는지는 아직 확인하지 않았다.
+- Actions 안내: `ubuntu-latest` 러너가 Ubuntu 26으로 바뀐다는 공지가 있다(현재 빌드 영향 없음).
 - `prisma db push --force-reset`은 Prisma의 AI 안전장치에 차단된다. 테스트 DB를 실행마다 새 임시 파일로 만들어 해결했다(PHASE_1.md 참고).
 - `@anthropic-ai/sdk`를 처음에 구버전 0.71로 고정했다. 이 버전에는 구조화 출력 헬퍼가 없어서 1.5.0으로 올렸다.
 - Bash 셸의 작업 폴더가 `node_modules` 안에 있으면 Windows 파일 잠금 때문에 npm 설치가 EBUSY로 실패한다. 셸 위치를 프로젝트 루트로 옮겨서 해결했다.
@@ -55,5 +61,6 @@
   (지원→초대 코드 인증→학습→퀴즈 100점, 마감 공고 차단, 직원 관리 화면 차단, 타사 공간 차단, 관리자 승인, 375px 모바일 가로 넘침 없음)
 
 ## 다음 실행 시 이어서 진행할 항목
-1. 사용자 승인 결과에 따라 push·Pages 활성화·배포 확인(Actions 실행 결과와 사이트 접속 확인)
-2. 이후 백엔드 Phase 4 나머지(ai-service, learning-service, 화면, 테스트)부터 재개
+1. 백엔드 Phase 4 나머지: `src/server/services/ai-service.ts`, `learning-service.ts`, document-service 테스트, 교육자료·AI 검토·학습 화면
+2. Phase 5~7 (채용, 화면 통합·시드, E2E·보안 검증)
+3. 데모 수정 시: `cd demo && npm test && npm run build` 후 push → Actions 자동 배포 여부 확인
