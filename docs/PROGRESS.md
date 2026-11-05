@@ -17,17 +17,24 @@
 - Phase 3: 권한 정책, 부서·직급·구성원 관리, 합격자 초대 코드, 감사 로그 — 커밋 `1880d55`
 - Phase 4 일부(체크포인트): 업로드 파일 검증·격리 저장소, AI 공급자(Mock 기본 / Claude 선택), 문서 서비스 — 커밋 `5592fcb`
 
+- 프론트엔드 데모 `demo/` 완성(React 19 + Vite 8 + Tailwind 4, base `/jobdicc/`, HashRouter) — 커밋 `393cf10`
+  - 랜딩, 로그인·회원가입(모의), 채용공고·입사지원·마감 처리, 내 대시보드·지원현황·철회, 합격자 초대 코드 인증
+  - 회사별 학습공간(회사 간 격리 화면), 직무별 교육자료(부서·직급 규칙), AI 요약(승인 배지), AI 퀴즈 체험·채점, 내 진도
+  - 관리자: 대시보드·학습 현황·감사 로그, 자료 등록·승인(본인 업로드 승인 제한), AI 결과 검토, 구성원 역할, 초대 발급, 채용공고, 지원자 상태
+  - 권한별 화면 비교표, 상단 데모 계정 전환, 모든 화면에 "데모·모의 동작" 표시
+- GitHub Actions Pages 배포 워크플로 `.github/workflows/deploy-demo.yml`, 루트 `README.md`
+- 공개 전 점검 완료: API 키·토큰 패턴 없음, `.env` 커밋 이력 없음, 이메일은 예약 도메인만 사용(커밋 작성자 이메일은 별도 확인 필요)
+
 ## 현재 진행 중인 작업
-- 우선순위 변경(2026-11-05 사용자 지시): **GitHub Pages 프론트엔드 데모를 먼저 완성**
-  - `demo/`에 React + Vite 정적 사이트 작성(base `/jobdicc/`)
-  - GitHub Actions Pages 배포 워크플로 작성
-  - 공개 전 비밀정보 점검 → 사용자 최종 승인 → push·배포
+- 원격 저장소 연결·push·Pages 활성화는 **사용자 최종 승인 대기** 중
+  - 원격 `ChaJunHo0516/jobdicc`: PUBLIC, 비어 있음(덮어쓸 이력 없음), Pages 미활성
+  - 확인 필요: 커밋 작성자 이메일(`git config user.email`)이 공개 저장소 이력에 노출된다
 
 ## 남은 작업
 **프론트엔드 데모**
-- [ ] 데모 앱: 랜딩, 로그인·회원가입(모의), 채용공고·입사지원, 내 대시보드·초대 코드, 회사별 학습(직무별 자료), AI 퀴즈 체험, 관리자 대시보드, 권한별 화면 전환
-- [ ] 데모 단위 테스트, 빌드 확인
-- [ ] Pages 워크플로, 비밀정보 스캔, 사용자 승인 후 push·배포
+- [x] 데모 앱 화면 전체
+- [x] 데모 단위 테스트(10개), 빌드, 브라우저 스모크 테스트(19개 항목, Edge headless)
+- [ ] 사용자 승인 후 `git remote add origin` → push → Pages 활성화(build_type=workflow) → 배포 확인
 
 **실제 백엔드(데모 이후 재개)**
 - [ ] Phase 4 나머지: AI 결과 서비스(생성·검토·승인 → 퀴즈 공개), 학습 서비스(열람·퀴즈 응시·진도), 화면, 테스트 작성
@@ -41,10 +48,12 @@
 - Bash 셸의 작업 폴더가 `node_modules` 안에 있으면 Windows 파일 잠금 때문에 npm 설치가 EBUSY로 실패한다. 셸 위치를 프로젝트 루트로 옮겨서 해결했다.
 
 ## 테스트 결과 (최근)
-- 백엔드: `npx vitest run` → 8 files, 105 tests passed / `tsc --noEmit` 통과 / `eslint` 통과 / `next build` 성공(Phase 3 기준)
+- 백엔드: `npx vitest run` → 8 files, 105 tests passed / `tsc --noEmit` 통과 / `eslint` 통과
 - Phase 4 신규 서비스(document-service, ai/*)는 **아직 테스트가 없다**(미검증).
+- 데모: `npm test` → 10 tests passed / `npm run build` 성공(JS 330KB, gzip 101KB) / 빌드 결과 경로 `/jobdicc/assets/...` 확인
+- 데모 브라우저 스모크(로컬 `vite preview` + Edge headless): 19/19 통과, 콘솔 오류 0
+  (지원→초대 코드 인증→학습→퀴즈 100점, 마감 공고 차단, 직원 관리 화면 차단, 타사 공간 차단, 관리자 승인, 375px 모바일 가로 넘침 없음)
 
 ## 다음 실행 시 이어서 진행할 항목
-1. `demo/` 데모 앱 완성 여부를 확인하고, 미완성 화면부터 이어서 작성
-2. 데모 빌드·테스트 → 비밀정보 스캔 → 사용자 승인 → `git push` → Pages 배포 확인
-3. 이후 백엔드 Phase 4 나머지(ai-service, learning-service, 테스트)부터 재개
+1. 사용자 승인 결과에 따라 push·Pages 활성화·배포 확인(Actions 실행 결과와 사이트 접속 확인)
+2. 이후 백엔드 Phase 4 나머지(ai-service, learning-service, 화면, 테스트)부터 재개
