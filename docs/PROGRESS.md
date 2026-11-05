@@ -19,7 +19,10 @@
 - 수정 사항·테스트 결과: `prejob/CHANGES.md` (방향키 계정 전환 버그, 메뉴 키보드 접근, 닫힌 메뉴 포커스, 미사용·오류 코드 정리, 초기화 문구)
 - 테스트: `file://` 온라인 46/46, 오프라인 46/46, HTTP `/jobdicc/` 46/46 — 모두 JS 오류 0
 - Pages 구조 변경: 루트를 PreJob으로 바꾸고, 기존 PreBridge 데모는 `/jobdicc/prebridge/`로 옮김(`demo/vite.config.ts` base 변경). 이전 데모 주소 `/jobdicc/#/...`는 이제 PreJob을 연다.
-- PreBridge 데모를 `/prebridge/`로 옮긴 뒤 다시 테스트: 단위 10/10, 빌드 성공, 브라우저 스모크 19/19(5회 중 4회 전체 통과. 1회는 "로그인 후 대시보드" 확인이 렌더링 전에 실행된 테스트 타이밍 문제로 보이며, 다시 실행하면 통과)
+- PreBridge 데모를 `/prebridge/`로 옮긴 뒤 다시 테스트: 단위 10/10, 빌드 성공, 브라우저 스모크 19/19
+  - "로그인 후 대시보드" 확인이 가끔 실패했는데, 화면 렌더링 전에 즉시 확인하던 테스트 스크립트의 경쟁 상태가 원인이었다. 최대 5초 기다리도록 테스트를 고친 뒤 실서버에서 3회 연속 19/19 통과(앱 문제 아님).
+- 커밋 `be9e6dd` push(fast-forward, 강제 push 없음) → push로 Actions 자동 실행 42053614124 성공(build 17s, deploy 19s)
+- 실서버 확인: `/jobdicc/`·`/jobdicc/prebridge/` HTTP 200, 배포된 PreJob이 커밋한 파일과 같음(MD5, 줄바꿈 정규화 기준), 실서버 PreJob 전체 테스트 46/46·JS 오류 0, PreBridge 스모크 19/19·콘솔 오류 0
 
 ## 완료된 작업
 - Phase 1: 설계 문서(`docs/PREBRIDGE_PLAN.md`, `ARCHITECTURE.md`, `SECURITY.md`), 데이터 모델, 프로젝트 골격 — 커밋 `90a6d0c`
@@ -73,4 +76,6 @@
 ## 다음 실행 시 이어서 진행할 항목
 1. 백엔드 Phase 4 나머지: `src/server/services/ai-service.ts`, `learning-service.ts`, document-service 테스트, 교육자료·AI 검토·학습 화면
 2. Phase 5~7 (채용, 화면 통합·시드, E2E·보안 검증)
-3. 데모 수정 시: `cd demo && npm test && npm run build` 후 push → Actions 자동 배포 여부 확인
+3. PreBridge 데모 수정 시: `cd demo && npm test && npm run build` 후 push → Actions가 자동 배포함(2026-11-06 push로 자동 실행 확인)
+4. PreJob 수정 시: `prejob/index.html` 수정 후 브라우저 테스트 → push(자동 배포). 원본(HackerTone `prejob.html`) 변경분을 반영할 때는 `prejob/CHANGES.md`의 수정 사항이 유지되는지 확인한다.
+5. 권장: PreJob 샘플 계정의 `prejob.kr` 이메일을 예약 도메인(`example.com`)으로 교체
