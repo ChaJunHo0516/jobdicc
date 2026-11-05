@@ -175,7 +175,14 @@ export async function listLearnerDocuments(ctx: TenantContext) {
   const visible = docs.filter((d) => canLearn(ctx, d, d.accessRules));
   const progress = await db.learningProgress.findMany({ where: { userId: ctx.userId, documentId: { in: visible.map((d) => d.id) } } });
   const byDoc = new Map(progress.map((p) => [p.documentId, p]));
-  return visible.map(({ accessRules: _rules, ...d }) => ({ ...d, progress: byDoc.get(d.id) ?? null }));
+  return visible.map((d) => ({
+    id: d.id,
+    title: d.title,
+    description: d.description,
+    createdAt: d.createdAt,
+    quizCount: d._count.quizzes,
+    progress: byDoc.get(d.id) ?? null,
+  }));
 }
 
 /** 학습 화면용 문서 상세. 볼 수 없는 문서는 존재 여부를 숨기기 위해 404. */
