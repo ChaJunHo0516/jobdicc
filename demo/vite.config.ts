@@ -3,9 +3,9 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 
-// GitHub Pages 프로젝트 사이트 경로: https://ChaJunHo0516.github.io/jobdicc/
+// GitHub Pages 경로: https://ChaJunHo0516.github.io/jobdicc/prebridge/ (루트는 PreJob)
 export default defineConfig({
-  base: "/jobdicc/",
+  base: "/jobdicc/prebridge/",
   plugins: [react(), tailwindcss()],
   test: {
     environment: "node",

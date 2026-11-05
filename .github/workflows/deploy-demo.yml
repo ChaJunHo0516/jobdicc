@@ -1,11 +1,14 @@
-# demo/ 정적 프론트엔드 데모를 GitHub Pages(https://ChaJunHo0516.github.io/jobdicc/)에 배포한다.
+# GitHub Pages(https://ChaJunHo0516.github.io/jobdicc/) 배포
+#   /jobdicc/            → prejob/index.html (PreJob 단일 HTML 웹서비스)
+#   /jobdicc/prebridge/  → demo/ (PreBridge React + Vite 정적 데모)
 # 루트의 Next.js 백엔드 앱은 서버가 필요하므로 Pages 로 배포하지 않는다.
-name: Deploy demo to GitHub Pages
+name: Deploy PreJob and demo to GitHub Pages
 
 on:
   push:
     branches: [main]
     paths:
+      - "prejob/**"
       - "demo/**"
       - ".github/workflows/deploy-demo.yml"
   workflow_dispatch:
@@ -22,9 +25,6 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: demo
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
@@ -32,13 +32,23 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: demo/package-lock.json
-      - run: npm ci
-      - run: npm test
-      - run: npm run build
+      - name: Test and build PreBridge demo
+        working-directory: demo
+        run: |
+          npm ci
+          npm test
+          npm run build
+      - name: Assemble site
+        run: |
+          mkdir -p _site/prebridge
+          cp prejob/index.html _site/index.html
+          cp -r demo/dist/. _site/prebridge/
+          test -s _site/index.html
+          test -s _site/prebridge/index.html
       - uses: actions/configure-pages@v6
       - uses: actions/upload-pages-artifact@v5
         with:
-          path: demo/dist
+          path: _site
 
   deploy:
     needs: build

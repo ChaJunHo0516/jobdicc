@@ -1,15 +1,25 @@
-# PreBridge 진행 현황 (PROGRESS)
+# jobdicc 진행 현황 (PROGRESS)
 
 > 작업이 중단되었다가 재개되면 이 파일과 `git log`, `git status`를 먼저 확인한 뒤 "다음 실행 시 이어서 진행할 항목"부터 진행한다.
 
-마지막 갱신: 2026-11-05
+마지막 갱신: 2026-11-06
 
 ## 저장소 구조
 | 경로 | 내용 | 상태 |
 |---|---|---|
+| `prejob/` | **PreJob** 단일 HTML 웹서비스 → Pages 루트 `/jobdicc/` | 반영 완료(2026-11-06) |
 | `/` (루트) | Next.js 15 + Prisma 실제 백엔드 앱 (서버 인증·권한·격리) | Phase 1~3 완료, Phase 4 진행 중 |
-| `demo/` | GitHub Pages용 정적 프론트엔드 데모 (React + Vite, 샘플 데이터·모의 동작) | 작업 중 |
-| `.github/workflows/` | GitHub Pages 배포 워크플로 | 작업 중 |
+| `demo/` | PreBridge 정적 프론트엔드 데모 (React + Vite) → Pages `/jobdicc/prebridge/` | 완료 |
+| `.github/workflows/deploy-demo.yml` | Pages 배포: PreJob(루트) + PreBridge 데모(`/prebridge/`) 합쳐서 배포 | 완료 |
+
+## PreJob 반영 (2026-11-06)
+- 원본: 팀 프로젝트 Nickname6532/HackerTone `prejob.html`(커밋 `f70b538`). 사용자 지시로 HackerTone은 **참고용**이며, 그 저장소에는 커밋·푸시하지 않았다.
+- 작업 위치: `C:\HackerTone`(원본 clone)에서 분석·수정·테스트 → 검증된 `index.html`을 이 저장소 `prejob/index.html`로 복사(MD5 일치 확인)
+  - `C:\HackerTone`의 작업물(`index.html`, `README.md` 수정, `docs/PROGRESS.md`)은 그 폴더에 커밋하지 않은 상태로 보존
+- 수정 사항·테스트 결과: `prejob/CHANGES.md` (방향키 계정 전환 버그, 메뉴 키보드 접근, 닫힌 메뉴 포커스, 미사용·오류 코드 정리, 초기화 문구)
+- 테스트: `file://` 온라인 46/46, 오프라인 46/46, HTTP `/jobdicc/` 46/46 — 모두 JS 오류 0
+- Pages 구조 변경: 루트를 PreJob으로 바꾸고, 기존 PreBridge 데모는 `/jobdicc/prebridge/`로 옮김(`demo/vite.config.ts` base 변경). 이전 데모 주소 `/jobdicc/#/...`는 이제 PreJob을 연다.
+- PreBridge 데모를 `/prebridge/`로 옮긴 뒤 다시 테스트: 단위 10/10, 빌드 성공, 브라우저 스모크 19/19(5회 중 4회 전체 통과. 1회는 "로그인 후 대시보드" 확인이 렌더링 전에 실행된 테스트 타이밍 문제로 보이며, 다시 실행하면 통과)
 
 ## 완료된 작업
 - Phase 1: 설계 문서(`docs/PREBRIDGE_PLAN.md`, `ARCHITECTURE.md`, `SECURITY.md`), 데이터 모델, 프로젝트 골격 — 커밋 `90a6d0c`

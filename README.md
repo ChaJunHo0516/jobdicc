@@ -1,22 +1,30 @@
-# PreBridge
+# jobdicc — PreJob · PreBridge
 
-기업별 AI 프리온보딩·직무교육·채용 통합 웹서비스입니다.
+신입사원 직무 언어 교육 서비스 **PreJob**과, 기업별 AI 프리온보딩·직무교육·채용 통합 서비스 **PreBridge**를 담은 저장소입니다.
 
-- **프론트엔드 데모**: https://ChaJunHo0516.github.io/jobdicc/
-  가상 기업·샘플 데이터·모의 동작으로 구성된 화면 시연용 사이트입니다. 실제 인증·보안·AI 기능은 적용되지 않습니다.
+| 사이트 | 주소 | 설명 |
+|---|---|---|
+| **PreJob** | https://ChaJunHo0516.github.io/jobdicc/ | 단일 HTML 웹서비스(`prejob/index.html`). 오프라인·더블클릭 실행 가능 |
+| PreBridge 데모 | https://ChaJunHo0516.github.io/jobdicc/prebridge/ | React + Vite 정적 데모(`demo/`) |
+
+두 사이트 모두 가상 기업·샘플 데이터·모의 동작으로 만든 시연용입니다. 실제 인증·보안·AI 기능은 적용되지 않습니다.
 
 ## 저장소 구성
 | 경로 | 설명 |
 |---|---|
-| `demo/` | GitHub Pages용 정적 데모 (React + Vite). 데이터는 브라우저 localStorage에만 저장됩니다. |
+| `prejob/` | PreJob 단일 HTML 웹서비스(`index.html`), 설명(`README.md`), 원본 대비 수정 내역(`CHANGES.md`) |
+| `demo/` | PreBridge 정적 데모 (React + Vite). 데이터는 브라우저 localStorage에만 저장됩니다. |
 | `src/`, `prisma/`, `tests/` | 실제 서비스용 Next.js + Prisma 백엔드 앱 (서버 인증, 권한, 회사 간 데이터 격리). 개발 진행 중입니다. |
 | `docs/` | 기획서, 아키텍처, 보안 설계, Phase별 보고서, 진행 현황(`PROGRESS.md`) |
 
-## 데모 실행
+## PreJob 실행
+`prejob/index.html`을 브라우저에서 열면 됩니다(서버·설치 불필요). 자세한 내용은 [`prejob/README.md`](prejob/README.md)를 참고하세요.
+
+## PreBridge 데모 실행
 ```bash
 cd demo
 npm ci
-npm run dev      # http://localhost:5173/jobdicc/
+npm run dev      # http://localhost:5173/jobdicc/prebridge/
 npm test         # 데모 로직 단위 테스트
 npm run build
 ```
