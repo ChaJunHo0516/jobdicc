@@ -6,7 +6,7 @@ const envSchema = z.object({
   STORAGE_DIR: z.string().default("./storage/uploads"),
   AI_PROVIDER: z.enum(["mock", "claude"]).default("mock"),
   ANTHROPIC_API_KEY: z.string().optional(),
-  ANTHROPIC_MODEL: z.string().default("claude-haiku-5-5"),
+  ANTHROPIC_MODEL: z.string().default("claude-opus-5-5"),
   BCRYPT_ROUNDS: z.coerce.number().int().min(4).max(15).default(12),
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
 });
