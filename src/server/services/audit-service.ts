@@ -1,5 +1,20 @@
 import type { Prisma } from "@prisma/client";
 import { prisma } from "../db";
+import { tenantDb } from "../tenant-db";
+import { authorize } from "../authz/policy";
+import type { TenantContext } from "../authz/context";
+
+/** 회사 감사 로그(최근 200건). 행위자 이름을 함께 반환한다. */
+export async function listAuditLogs(ctx: TenantContext) {
+  authorize(ctx, "audit:view");
+  const logs = await tenantDb(ctx.companyId).auditLog.findMany({ orderBy: { createdAt: "desc" }, take: 200 });
+  const actors = await prisma.user.findMany({
+    where: { id: { in: [...new Set(logs.map((l) => l.actorId))] } },
+    select: { id: true, name: true },
+  });
+  const names = new Map(actors.map((a) => [a.id, a.name]));
+  return logs.map((l) => ({ ...l, actorName: names.get(l.actorId) ?? "알 수 없음" }));
+}
 
 type AuditInput = {
   companyId: string | null;

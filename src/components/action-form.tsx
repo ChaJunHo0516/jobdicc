@@ -11,7 +11,6 @@ type Props = {
   resetOnSuccess?: boolean;
   /** 확인 대화상자 문구(위험한 작업용) */
   confirm?: string;
-  encType?: "multipart/form-data";
 };
 
 /** Server Action 결과(오류/성공/1회성 비밀값)를 표시하는 폼 */
